@@ -1,0 +1,46 @@
+{
+  "name": "rush-social",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "build": "node scripts/configure.mjs && vinext build",
+    "preview": "wrangler dev --config dist/server/wrangler.json --local --persist-to .wrangler/state --ip 127.0.0.1",
+    "typecheck": "tsc --noEmit",
+    "test": "node tests/backend.cjs && node tests/config.test.mjs",
+    "db:local": "wrangler d1 migrations apply DB --local --config wrangler.json --persist-to .wrangler/state",
+    "db:remote": "node scripts/configure.mjs --production && wrangler d1 migrations apply DB --remote --config wrangler.json",
+    "db:generate": "drizzle-kit generate",
+    "deploy": "node scripts/deploy.mjs",
+    "setup": "node scripts/setup.mjs"
+  },
+  "dependencies": {
+    "drizzle-orm": "0.45.4",
+    "lucide-react": "1.54.0",
+    "next": "16.4.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@cloudflare/vite-plugin": "1.63.1",
+    "@cloudflare/workers-types": "5.20261009.1",
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/node": "26.6.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.1.2",
+    "@vitejs/plugin-rsc": "0.5.36",
+    "drizzle-kit": "0.31.11",
+    "react-server-dom-webpack": "19.3.0",
+    "tailwindcss": "4.3.3",
+    "typescript": "5.9.3",
+    "vinext": "1.1.0",
+    "vite": "8.3.4",
+    "wrangler": "4.149.0"
+  },
+  "type": "module",
+  "description": "Social feed, trade activity, profiles, and DMs for MarketRush."
+}

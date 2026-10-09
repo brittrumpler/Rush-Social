@@ -1,0 +1,13 @@
+import { env } from 'cloudflare:workers';
+import { identity,ApiError,errorResponse,textField,sameOrigin } from '../../../lib/game';
+export const dynamic='force-dynamic';
+const json=(d:unknown,status=200)=>Response.json(d,{status,headers:{'Cache-Control':'no-store'}});
+export async function GET(req:Request){try{const u=await identity(req);if(!env.DB)throw new ApiError(503,'Messages are unavailable.');const q=new URL(req.url).searchParams,peer=q.get('peer');
+ if(peer){const person=await env.DB.prepare('SELECT id,name,avatar_id FROM users WHERE id=?').bind(peer).first();if(!person)throw new ApiError(404,'User not found.');const list=await env.DB.prepare('SELECT id,sender_id,recipient_id,content,created_at,read_at FROM messages WHERE (sender_id=? AND recipient_id=?) OR (sender_id=? AND recipient_id=?) ORDER BY created_at DESC,id DESC LIMIT 100').bind(u.id,peer,peer,u.id).all();return json({peer:person,messages:list.results.reverse()});}
+ const people=await env.DB.prepare('SELECT id,name,avatar_id FROM users WHERE id!=? ORDER BY name LIMIT 200').bind(u.id).all();const recent=await env.DB.prepare('SELECT m.*,s.name AS sender_name,r.name AS recipient_name FROM messages m JOIN users s ON s.id=m.sender_id JOIN users r ON r.id=m.recipient_id WHERE m.sender_id=? OR m.recipient_id=? ORDER BY m.created_at DESC LIMIT 300').bind(u.id,u.id).all();return json({people:people.results,messages:recent.results});
+ }catch(e){return errorResponse(e);}}
+export async function POST(req:Request){try{sameOrigin(req);const u=await identity(req);if(!env.DB)throw new ApiError(503,'Messages are unavailable.');const raw=await req.text();if(raw.length>5000)throw new ApiError(413,'Message is too long.');const b=JSON.parse(raw),peer=textField(b.peer,80);if(peer===u.id)throw new ApiError(400,'Choose another trader.');const person=await env.DB.prepare('SELECT id FROM users WHERE id=?').bind(peer).first();if(!person)throw new ApiError(404,'This person must join Rush Social first.');
+ if(b.action==='read'){await env.DB.prepare('UPDATE messages SET read_at=? WHERE sender_id=? AND recipient_id=? AND read_at IS NULL').bind(Date.now(),peer,u.id).run();return json({ok:true});}
+ const content=textField(b.content,2000),recent=await env.DB.prepare('SELECT COUNT(*) AS n FROM messages WHERE sender_id=? AND created_at>?').bind(u.id,Date.now()-60000).first<any>();if(Number(recent?.n)>=30)throw new ApiError(429,'Please wait before sending more messages.');
+ await env.DB.prepare('INSERT INTO messages(id,sender_id,recipient_id,content,created_at) VALUES(?,?,?,?,?)').bind(crypto.randomUUID(),u.id,peer,content,Date.now()).run();return json({ok:true},201);
+ }catch(e){return errorResponse(e);}}

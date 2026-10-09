@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import { buildConfig, placeholder } from '../scripts/configure.mjs';
+const settings = {workerName:'rush-social',databaseName:'rush-social-db',bucketName:'rush-social-uploads',databaseId:''};
+assert.equal(buildConfig(settings).d1_databases[0].database_id, placeholder);
+assert.throws(() => buildConfig(settings, {}, true));
+assert.throws(() => buildConfig({...settings, workerName:'../bad'}));
+const id = '12345678-1234-4321-8123-123456789abc';
+const config = buildConfig(settings, {CLOUDFLARE_D1_DATABASE_ID:id}, true);
+assert.equal(config.d1_databases[0].database_id,id);
+assert.equal(config.r2_buckets[0].binding,'BUCKET');
+assert.equal(config.d1_databases[0].migrations_dir,'drizzle');
+console.log('Deployment configuration tests passed.');

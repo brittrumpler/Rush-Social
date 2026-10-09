@@ -1,0 +1,32 @@
+Upload every file and folder from this package to your GitHub repository root.
+
+Required folders:
+.github (hidden; contains automatic deployment and checks)
+app
+db
+drizzle
+lib
+scripts
+tests
+worker
+
+Required root files:
+package.json
+package-lock.json
+deploy.config.json
+vite.config.ts
+tsconfig.json
+next.config.ts
+next-env.d.ts
+cloudflare-env.d.ts
+postcss.config.mjs
+drizzle.config.ts
+.gitignore (hidden)
+.gitattributes (hidden)
+.nvmrc (hidden)
+README.md
+START-HERE.md
+UPLOAD-CHECKLIST.txt
+
+Do not upload node_modules, dist, .wrangler, wrangler.json, passwords, or API tokens.
+Start with START-HERE.md after uploading.

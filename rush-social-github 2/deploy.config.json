@@ -1,0 +1,6 @@
+{
+  "workerName": "rush-social",
+  "databaseName": "rush-social-db",
+  "databaseId": "",
+  "bucketName": "rush-social-uploads"
+}

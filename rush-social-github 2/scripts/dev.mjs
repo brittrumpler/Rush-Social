@@ -1,0 +1,14 @@
+import { spawnSync, spawn } from 'node:child_process';
+import { configure } from './configure.mjs';
+configure();
+process.env.CLOUDFLARE_CF_FETCH_ENABLED = 'false';
+process.env.WRANGLER_SEND_METRICS = 'false';
+process.env.WRANGLER_LOG_PATH = '.wrangler/logs';
+process.env.WRANGLER_REGISTRY_PATH = '.wrangler/dev-registry';
+process.env.MINIFLARE_REGISTRY_PATH = '.wrangler/registry';
+const migration = spawnSync(process.execPath, ['node_modules/wrangler/bin/wrangler.js', 'd1', 'migrations', 'apply', 'DB', '--local', '--config', 'wrangler.json', '--persist-to', '.wrangler/state'], {stdio: 'inherit'});
+if (migration.status !== 0) process.exit(migration.status || 1);
+const child = spawn(process.execPath, ['node_modules/vinext/dist/cli.js', 'dev', ...process.argv.slice(2)], {stdio: 'inherit'});
+for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, () => child.kill(signal));
+child.on('error', error => {console.error(error); process.exit(1);});
+child.on('exit', code => process.exit(code || 0));
