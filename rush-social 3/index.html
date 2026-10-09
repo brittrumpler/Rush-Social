@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Rush Social — big trades, small wins, and questionable market takes. The social home for Market Rush.">
+<meta name="theme-color" content="#10120f"><title>Rush Social · The market has a group chat</title>
+<link rel="icon" href="./favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="./src/styles.css">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('rush.theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch{}</script>
+<script src="./config.js" defer></script><script type="module" src="./src/app.js"></script>
+</head>
+<body>
+<div class="shell">
+<aside class="sidebar">
+<a class="brand" href="./" aria-label="Rush Social home"><span class="brand-icon">↗</span><span>rush<span class="brand-soft">social</span><small>THE MARKET HAS A GROUP CHAT.</small></span></a>
+<nav aria-label="Main navigation">
+<button class="nav-item active" data-view="home"><span data-icon="home"></span>Home feed</button>
+<button class="nav-item" data-view="trades"><span data-icon="chart"></span>Trade tape <span class="live-dot"></span></button>
+<button class="nav-item" data-view="leaderboard"><span data-icon="trophy"></span>Leaderboard</button>
+<button class="nav-item" data-view="bookmarks"><span data-icon="bookmark"></span>Bookmarks</button>
+<button class="nav-item" data-view="profile"><span data-icon="user"></span>My profile</button>
+</nav>
+<button class="primary compose-nav" id="compose-nav">Create a post <span>＋</span></button>
+<div class="sidebar-bottom"><div class="theme-options" aria-label="Color theme"><button data-theme-choice="light">☀ Light</button><button data-theme-choice="dark">☾ Dark</button></div><div id="account"></div><p class="fine">A little competition. A lot of banter.<br>Virtual money. Real bragging rights.</p></div>
+</aside>
+<main id="main">
+<header class="main-header"><div><span class="eyebrow">YOUR TRADING CIRCLE</span><h1 id="page-title">The feed<span class="lime">.</span></h1></div><div class="header-tools"><span class="connection" id="connection">Demo playground</span><button id="mobile-theme" class="mobile-theme" aria-label="Toggle light or dark mode">☾</button></div></header>
+<div class="demo-banner" id="demo-banner">You’re in the demo. Try posting, liking, and editing your profile. <button id="connect">Connect account ↗</button></div>
+<section id="hero" class="hero"><div><span class="hero-label">GOOD TRADES. BETTER STORIES.</span><h2>The market has<br>a group chat.</h2><p>Share the wins. Laugh at the losses.<br>See what your friends are trading.</p><button id="hero-post">Join the conversation <span>↗</span></button></div><div class="hero-art" aria-hidden="true"><div class="orb"></div><span class="floating-tag tag-one">$RUSH ↗</span><svg viewBox="0 0 260 160"><path d="M0 145 L40 118 L67 130 L110 65 L141 85 L185 23 L208 47 L260 0"/></svg><span class="floating-tag tag-two">just one more trade.</span></div></section>
+<section id="composer" class="composer" aria-label="Create a post"></section>
+<div id="feed-controls" class="feed-controls"><div role="tablist" aria-label="Feed filter"><button class="selected" data-filter="all" role="tab" aria-selected="true">For you</button><button data-filter="trades" role="tab" aria-selected="false">Trades <span class="live-dot"></span></button><button data-filter="banter" role="tab" aria-selected="false">Banter</button></div><label class="sort-label"><span class="sr-only">Sort feed</span><select id="sort"><option value="latest">Latest first</option><option value="popular">Most liked</option></select></label></div>
+<div id="content" aria-live="polite"></div><button id="load-more" class="secondary load-more" hidden>Load more</button>
+<footer class="main-footer">MARKET RUSH UNIVERSE <span>✳</span> MADE FOR THE GROUP CHAT</footer>
+</main>
+<aside class="rightbar"><label class="search"><span data-icon="search"></span><input id="search" type="search" placeholder="Search people, posts, $tickers" aria-label="Search feed"></label><section class="panel portfolio" id="portfolio"></section><section class="panel" id="leaders"></section><section class="panel" id="trending"></section><div class="community-note"><span>↗</span><h3>Big wins belong here.</h3><p>That ridiculous trade? That perfectly timed meme? Your people get it.</p></div><p class="fine">Rush Social × Market Rush<br>All money and trades are part of a game.</p></aside>
+</div>
+<dialog id="modal"><button id="close-modal" class="close" aria-label="Close dialog">×</button><div id="modal-content"></div></dialog>
+<div id="toast" role="status" hidden></div>
+</body></html>
